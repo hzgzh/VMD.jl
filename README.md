@@ -53,7 +53,7 @@ v = vmd(f ; alpha = alpha,tau = tau,K = K,DC = false,init = 1,tol = tol,sample_f
 ```
 ### plot original signal and spectrum
 ```plot(v;k = 0)```
-![origin dray](docs\imgs\0.png)
+![origin dray](docs/imgs/0.png)
 
 ### plot 1st decomposed component and spectrum
 ```plot(v;k = 1)```
