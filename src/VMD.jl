@@ -3,7 +3,7 @@ module VMD
 using FFTW
 using Plots
 using Printf
-pyplot()
+
 export Vmd,vmd,plot,compare,n_component,n_mode
 
 """
@@ -109,13 +109,14 @@ plot(v;k = 0)
 plot(v;k = 1)
 ```
 """
-function vmd(signal;alpha=2*length(signal), tau=0, K=3, DC=false, init=1, tol=1e-6,sample_frequency=100)
+function vmd(signal::Array{Typ,1};alpha=2*length(signal), tau=0, K=3, DC=false, init=1, tol=1e-6,sample_frequency=100) where Typ
     # ---------- Preparations
 
     # Period and sampling frequency of input signal
    
    
     T =  length(signal)
+    fs = 1/T
     T2 = Int(T / 2)
      # extend the signal by mirroring
     f = [signal[T2:-1:1];signal;signal[T:-1:T2 + 1]]
@@ -140,7 +141,7 @@ function vmd(signal;alpha=2*length(signal), tau=0, K=3, DC=false, init=1, tol=1e
     fill!(f_hat_plus[1:T2] ,0.0 + 0.0im)
 
     # matrix keeping track of every iterant // could be discarded for mem
-    u_hat_plus = zeros(Complex{Float64},T, K,2)
+    u_hat_plus = zeros(Complex{Typ},T, K,2)
 
     # Initialization of omega_k
     omega_plus = zeros(K,2)
@@ -149,9 +150,9 @@ function vmd(signal;alpha=2*length(signal), tau=0, K=3, DC=false, init=1, tol=1e
             omega_plus[i,1] = (0.5 / K) * (i - 1)
         end
     elseif init == 2
-        omega_plus[:,1] = @. sort(exp(log(fs) + (log(0.5) - log(fs)) * rand(1, K)))
+        omega_plus[:,1] = sort(exp.(log(fs) .+ (log(0.5) - log(fs)) .* rand(K)))
     else
-        omega_plus[:,1] = 0
+        omega_plus[:,1] .= 0
     end
 
     # if DC mode imposed, set its omega to 0
@@ -160,12 +161,12 @@ function vmd(signal;alpha=2*length(signal), tau=0, K=3, DC=false, init=1, tol=1e
     end
 
     # start with empty dual variables
-    lambda_hat = zeros(Complex{Float64}, T,2)
+    lambda_hat = zeros(Complex{Typ}, T,2)
     tmp = zeros(Complex{Float64}, T)
     # other inits
     uDiff = tol + eps() # update step
     n = 1 # loop counter
-    sum_uk = zeros(Complex{Float64}, T) # accumulator
+    sum_uk = zeros(Complex{Typ}, T) # accumulator
 
     # ----------- Main loop for iterative updates
 
@@ -182,7 +183,7 @@ function vmd(signal;alpha=2*length(signal), tau=0, K=3, DC=false, init=1, tol=1e
             u_hat_plus[i,k,2]=(f_hat_plus[i]-sum_uk[i]-lambda_hat[i,1]/2.0)/(1.0 + Alpha[k]*(freqs[i]-omega_plus[k,1])^2)
         end
         
-        a=zeros(ComplexF64,2)
+        a=zeros(Complex{Typ},2)
         # update first omega if not held at 0
         if ~DC
             @inbounds for i in T2+1:T
@@ -207,7 +208,7 @@ function vmd(signal;alpha=2*length(signal), tau=0, K=3, DC=false, init=1, tol=1e
                                      Alpha[k] * (freqs[i] - omega_plus[k , 1])^2)
             end
             # center frequencies
-            a=zeros(ComplexF64,2)
+            a=zeros(Complex{Typ},2)
             @inbounds for i in T2+1:T
                 a[1]+=freqs[i]*abs(u_hat_plus[i, k,2])^2
                 a[2]+=abs(u_hat_plus[i, k,2])^2
@@ -258,7 +259,7 @@ function vmd(signal;alpha=2*length(signal), tau=0, K=3, DC=false, init=1, tol=1e
     omega = omega_plus[:,2]
 
     # Signal reconstruction
-    u_hat = zeros(Complex{Float64}, T, K)
+    u_hat = zeros(Complex{Typ}, T, K)
     
     u_hat[T2 + 1:T, :] = u_hat_plus[T2 + 1:T, :,2]
     u_hat[T2 + 1:-1:2, :] = conj(u_hat_plus[T2 + 1:T, :,2])
@@ -275,7 +276,7 @@ function vmd(signal;alpha=2*length(signal), tau=0, K=3, DC=false, init=1, tol=1e
 
     # recompute spectrum
     # clear u_hat;
-    u_hat = zeros(Complex{Float64}, size(u)[1], K)
+    u_hat = zeros(Complex{Typ}, size(u)[1], K)
     for k = 1:K
         u_hat[:, k] = fftshift(fft(u[:,k]))
     end
@@ -324,7 +325,7 @@ end
 """
 function compare(v::Vmd)
     T = length(v.signal)
-    t = collect(1:T)*v.sample_frequency/T
+    t = collect(1:T)./v.sample_frequency
     Plots.plot(t,v.signal,label = "origin signal")
     Plots.plot!(t,[sum(v.signal_d[i,:]) for i in 1:length(v.signal)],label = "reconstructed signal",xlabel="Time s")
 end
