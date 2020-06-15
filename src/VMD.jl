@@ -298,7 +298,7 @@ end
 - `vmd::Vmd` : vmd
 - `k::Int`   : 0-original signal 1-first component enforcement
 """
-function plot(v::Vmd;k=1)
+function Plots.plot(v::Vmd;k=1)
     @assert k<=v.K error("can't great than $(vmd.K)")
 
     T = length(v.signal)
