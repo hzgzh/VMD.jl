@@ -1,5 +1,10 @@
 # VMD.jl
 
+[![](https://img.shields.io/badge/docs-stable-blue.svg)](https://hzgzh.github.io/VMD.jl/stable)
+[![](https://img.shields.io/badge/docs-dev-blue.svg)](https://hzgzh.github.io/VMD.jl/dev)
+
+
+
 A package for `Variational Mode Decompostion` in julia
 
 Ref: `Variational Mode Decompostion` ,
