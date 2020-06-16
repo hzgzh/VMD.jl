@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1.0"/><title>- · VMD.jl</title><link href="https://fonts.googleapis.com/css?family=Lato|Roboto+Mono" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.11.2/css/fontawesome.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.11.2/css/solid.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.11.2/css/brands.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.11.1/katex.min.css" rel="stylesheet" type="text/css"/><script>documenterBaseURL=".."</script><script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.6/require.min.js" data-main="../assets/documenter.js"></script><script src="../siteinfo.js"></script><script src="../../versions.js"></script><link class="docs-theme-link" rel="stylesheet" type="text/css" href="../assets/themes/documenter-dark.css" data-theme-name="documenter-dark"/><link class="docs-theme-link" rel="stylesheet" type="text/css" href="../assets/themes/documenter-light.css" data-theme-name="documenter-light" data-theme-primary/><script src="../assets/themeswap.js"></script></head><body><div id="documenter"><nav class="docs-sidebar"><div class="docs-package-name"><span class="docs-autofit">VMD.jl</span></div><form class="docs-search" action="../search/"><input class="docs-search-query" id="documenter-search-query" name="q" type="text" placeholder="Search docs"/></form><ul class="docs-menu"><li><a class="tocitem" href="../">Home</a></li><li><a class="tocitem" href="../examples/">Examples</a></li><li><a class="tocitem" href="../api/">Reference</a></li></ul><div class="docs-version-selector field has-addons"><div class="control"><span class="docs-label button is-static is-size-7">Version</span></div><div class="docs-selector control is-expanded"><div class="select is-fullwidth is-size-7"><select id="documenter-version-selector"></select></div></div></div></nav><div class="docs-main"><header class="docs-navbar"><nav class="breadcrumb"><ul class="is-hidden-mobile"><li class="is-active"><a href>-</a></li></ul><ul class="is-hidden-tablet"><li class="is-active"><a href>-</a></li></ul></nav><div class="docs-right"><a class="docs-edit-link" href="https://github.com/hzgzh/VMD.jl/blob/master/docs/src/example2.md" title="Edit on GitHub"><span class="docs-icon fab"></span><span class="docs-label is-hidden-touch">Edit on GitHub</span></a><a class="docs-settings-button fas fa-cog" id="documenter-settings-button" href="#" title="Settings"></a><a class="docs-sidebar-button fa fa-bars is-hidden-desktop" id="documenter-sidebar-button" href="#"></a></div></header><article class="content" id="documenter-page"><h2 id="Example2-1"><a class="docs-heading-anchor" href="#Example2-1">Example2</a><a class="docs-heading-anchor-permalink" href="#Example2-1" title="Permalink"></a></h2><p>The second example uses a quadratic trend, a chirp signal, and a third mode with sharp transition between two constant frequencies</p>$<p>f_{\mathrm{Sig} 2}(t)=6 t^{2}+\cos \left(10 \pi t+10 \pi t^{2}\right)+\left{\begin{array}{ll} \cos (60 \pi t) &amp; t \leq 0.5 \
+\cos (80 \pi t-10 \pi) &amp; t&gt;0.5 \end{array}\right. $</p><p>For <span>$t \in [0,1]$</span>the chirp’s instantaneous frequency varies linearly between <span>$10\pi$</span> an <span>$30\pi$</span>.Consequently, the theoretical center frequency of the mode is located at <span>$20\pi$</span> . The piecewise-constant bi-harmonic has spectral peaks expected at <span>$60\pi$</span> and <span>$80\pi$</span></p><p>Again, with VMD the estimated center frequencies con- verge to the expected frequencies precisely. Here, we chose to decompose into four modes, thus assigning each half of the piecewise-constant frequency signal to a separate mode. The spectral partitioning can be nicely appreciated in the spectral plot of the different modes. Here, EMD does a better job recov- ering the quadratic trend, and, correspondingly, the first oscilla- tion. However, EMD is unable to separate the two pieces of the piecewise constant frequency signal. .</p><pre><code class="language-julia-repl">julia&gt; using VMD,Random,Plots
+
+julia&gt; T = 1000;
+
+julia&gt; t = (1:T)/T;
+
+julia&gt; sample_frequency = 1000;
+
+julia&gt; # center frequencies of components
+       f_1 = 10;
+
+julia&gt; f_2 = 60;
+
+julia&gt; f_3 = 80;
+
+julia&gt; # modes
+       v_1 = @. 6t^2;
+
+julia&gt; v_2 = @. cos(10π*t+10π*t^2)
+1000-element Array{Float64,1}:
+ 0.9995055730743954
+ 0.9980188300587944
+ 0.995535316310215
+ 0.9920515766278236
+ 0.9875651726383378
+ 0.9820746992776882
+ 0.9755798003302669
+ 0.9680811829874794
+ 0.9595806313877643
+ 0.9500810191007717
+ ⋮
+ 0.730343516655704
+ 0.7910975728967998
+ 0.8449333912108219
+ 0.8913628126476093
+ 0.9299614080033781
+ 0.9603725301679537
+ 0.9823107900032507
+ 0.995564920611647
+ 1.0
+
+julia&gt; v_3 = [t1&gt;=0.5 ? cos(60π*t1) : cos(80π*t1-10π) for t1 in t]
+1000-element Array{Float64,1}:
+  0.9685831611286312
+  0.8763066800438627
+  0.7289686274214112
+  0.5358267949789944
+  0.3090169943749463
+  0.06279051952931364
+ -0.18738131458572646
+ -0.42577929156507305
+ -0.6374239897486917
+ -0.8090169943749481
+  ⋮
+  0.06279051952930043
+  0.248689887164824
+  0.42577929156505256
+  0.5877852522924629
+  0.72896862742139
+  0.8443279255020033
+  0.9297764858882469
+  0.9822872507286828
+  1.0
+
+julia&gt; # composite signal, including noise
+       f = v_1 + v_2 + v_3 + 0.1*randn(length(v_1));
+
+julia&gt; # some sample parameters for VMD
+       alpha = 2000;       # moderate bandwidth constraint
+
+julia&gt; tau = 0;            # noise-tolerance (no strict fidelity enforcement)
+
+julia&gt; K = 4;              # 3 modes
+
+julia&gt; DC = false;             # no DC part imposed
+
+julia&gt; init = 0;           # initialize omegas uniformly
+
+julia&gt; tol = 1e-7;
+
+julia&gt; v = vmd(f ; alpha = alpha,tau = tau,K = K,DC = false,init = 1,tol = tol,sample_frequency = sample_frequency)
+--iteration times 294 -- error 9.764555861617233e-8
+
+julia&gt; # the first mode frequency
+       print(&quot;1st mode frequency $(n_mode(v,1))&quot;)
+1st mode frequency 0.16586040724947226
+julia&gt; p0 = VMD.plot(v,k=0)
+Plot{Plots.GRBackend() n=2}
+
+julia&gt; savefig(p0,&quot;2_0.png&quot;)
+
+julia&gt; p1 = VMD.plot(v,k=1)
+Plot{Plots.GRBackend() n=2}
+
+julia&gt; savefig(p1,&quot;2_1.png&quot;)
+
+julia&gt; p2 = VMD.plot(v,k=2)
+Plot{Plots.GRBackend() n=2}
+
+julia&gt; savefig(p2,&quot;2_2.png&quot;)
+
+julia&gt; p3 = VMD.plot(v,k=3)
+Plot{Plots.GRBackend() n=2}
+
+julia&gt; savefig(p3,&quot;2_3.png&quot;)</code></pre><h2 id="plot-the-original-signal-and-spectrum-1"><a class="docs-heading-anchor" href="#plot-the-original-signal-and-spectrum-1">plot the original signal and spectrum</a><a class="docs-heading-anchor-permalink" href="#plot-the-original-signal-and-spectrum-1" title="Permalink"></a></h2><p><img src="../2_0.png" alt/></p><h2 id="plot-the-1st-decomposed-signal-and-spectrum-1"><a class="docs-heading-anchor" href="#plot-the-1st-decomposed-signal-and-spectrum-1">plot the 1st decomposed signal and spectrum</a><a class="docs-heading-anchor-permalink" href="#plot-the-1st-decomposed-signal-and-spectrum-1" title="Permalink"></a></h2><p><img src="../2_1.png" alt/></p><h2 id="plot-the-2st-signal-and-spectrum-1"><a class="docs-heading-anchor" href="#plot-the-2st-signal-and-spectrum-1">plot the 2st signal and spectrum</a><a class="docs-heading-anchor-permalink" href="#plot-the-2st-signal-and-spectrum-1" title="Permalink"></a></h2><p><img src="../2_2.png" alt/></p><h2 id="plot-the-3st-decomposed-signal-and-spectrum-1"><a class="docs-heading-anchor" href="#plot-the-3st-decomposed-signal-and-spectrum-1">plot the 3st decomposed signal and spectrum</a><a class="docs-heading-anchor-permalink" href="#plot-the-3st-decomposed-signal-and-spectrum-1" title="Permalink"></a></h2><p><img src="../2_3.png" alt/></p></article></div><div class="modal" id="documenter-settings"><div class="modal-background"></div><div class="modal-card"><header class="modal-card-head"><p class="modal-card-title">Settings</p><button class="delete"></button></header><section class="modal-card-body"><p><label class="label">Theme</label><div class="select"><select id="documenter-themepicker"><option value="documenter-light">documenter-light</option><option value="documenter-dark">documenter-dark</option></select></div></p><hr/><p>This document was generated with <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> on <span class="colophon-date" title="Tuesday 16 June 2020 04:41">Tuesday 16 June 2020</span>. Using Julia version 1.4.2.</p></section><footer class="modal-card-foot"></footer></div></div></div></body></html>

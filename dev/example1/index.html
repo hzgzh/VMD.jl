@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1.0"/><title>- · VMD.jl</title><link href="https://fonts.googleapis.com/css?family=Lato|Roboto+Mono" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.11.2/css/fontawesome.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.11.2/css/solid.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.11.2/css/brands.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.11.1/katex.min.css" rel="stylesheet" type="text/css"/><script>documenterBaseURL=".."</script><script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.6/require.min.js" data-main="../assets/documenter.js"></script><script src="../siteinfo.js"></script><script src="../../versions.js"></script><link class="docs-theme-link" rel="stylesheet" type="text/css" href="../assets/themes/documenter-dark.css" data-theme-name="documenter-dark"/><link class="docs-theme-link" rel="stylesheet" type="text/css" href="../assets/themes/documenter-light.css" data-theme-name="documenter-light" data-theme-primary/><script src="../assets/themeswap.js"></script></head><body><div id="documenter"><nav class="docs-sidebar"><div class="docs-package-name"><span class="docs-autofit">VMD.jl</span></div><form class="docs-search" action="../search/"><input class="docs-search-query" id="documenter-search-query" name="q" type="text" placeholder="Search docs"/></form><ul class="docs-menu"><li><a class="tocitem" href="../">Home</a></li><li><a class="tocitem" href="../examples/">Examples</a></li><li><a class="tocitem" href="../api/">Reference</a></li></ul><div class="docs-version-selector field has-addons"><div class="control"><span class="docs-label button is-static is-size-7">Version</span></div><div class="docs-selector control is-expanded"><div class="select is-fullwidth is-size-7"><select id="documenter-version-selector"></select></div></div></div></nav><div class="docs-main"><header class="docs-navbar"><nav class="breadcrumb"><ul class="is-hidden-mobile"><li class="is-active"><a href>-</a></li></ul><ul class="is-hidden-tablet"><li class="is-active"><a href>-</a></li></ul></nav><div class="docs-right"><a class="docs-edit-link" href="https://github.com/hzgzh/VMD.jl/blob/master/docs/src/example1.md" title="Edit on GitHub"><span class="docs-icon fab"></span><span class="docs-label is-hidden-touch">Edit on GitHub</span></a><a class="docs-settings-button fas fa-cog" id="documenter-settings-button" href="#" title="Settings"></a><a class="docs-sidebar-button fa fa-bars is-hidden-desktop" id="documenter-sidebar-button" href="#"></a></div></header><article class="content" id="documenter-page"><h2 id="Example1-1"><a class="docs-heading-anchor" href="#Example1-1">Example1</a><a class="docs-heading-anchor-permalink" href="#Example1-1" title="Permalink"></a></h2><p>The first signal is a composition of three simple components, namely a general linear trend and two dif- ferent harmonics: <span>$f_{\mathrm{Sig} 1}(t)=6 t+\cos (8 \pi t)+0.5 \cos (40 \pi t)$</span></p><p>The signal, its three constituent modes, and the composite Fourier spectrum are shown in Fig. 9. The main challenge of this signal is the linear growth term, whose higher order harmonics spread over the whole spectrum.</p><p>The recovered VMD modes constitute a nice partition of the input spectrum, with each mode being clearly dominant around its respective center frequency. The three modes in time domain show nice separation into three distinct signals of characteristic oscillations. Compared to the EMD results, the proposed VMD method performs clearly better, with less spurious oscillations in the trend and mid-frequency signal.</p><pre><code class="language-julia-repl">julia&gt; using VMD,Random,Plots
+
+julia&gt; T = 1000;
+
+julia&gt; t = (1:T)/T;
+
+julia&gt; sample_frequency = 1000;
+
+julia&gt; # modes
+       v_1 = @. 6t;
+
+julia&gt; v_2 = @. cos(8π*t)
+1000-element Array{Float64,1}:
+ 0.9996841892832999
+ 0.9987369566060175
+ 0.9971589002606139
+ 0.9949510169813002
+ 0.9921147013144779
+ 0.9886517447379141
+ 0.9845643345292053
+ 0.9798550523842469
+ 0.9745268727865771
+ 0.9685831611286311
+ ⋮
+ 0.9798550523842463
+ 0.9845643345292052
+ 0.9886517447379136
+ 0.9921147013144778
+ 0.9949510169813
+ 0.9971589002606139
+ 0.9987369566060175
+ 0.9996841892833
+ 1.0
+
+julia&gt; v_3 = @. 0.5cos(40π*t)
+1000-element Array{Float64,1}:
+ 0.49605735065723894
+ 0.48429158056431554
+ 0.46488824294412573
+ 0.4381533400219318
+ 0.4045084971874737
+ 0.3644843137107058
+ 0.3187119948743449
+ 0.2679133974894983
+ 0.2128896457825364
+ 0.15450849718747373
+ ⋮
+ 0.26791339748949866
+ 0.31871199487434215
+ 0.36448431371070555
+ 0.4045084971874712
+ 0.4381533400219313
+ 0.4648882429441239
+ 0.48429158056431515
+ 0.4960573506572382
+ 0.5
+
+julia&gt; # composite signal, including noise
+       f = v_1 + v_2 + v_3 + 0.1*randn(length(v_1));
+
+julia&gt; # some sample parameters for VMD
+       alpha = 2000;       # moderate bandwidth constraint
+
+julia&gt; tau = 0;            # noise-tolerance (no strict fidelity enforcement)
+
+julia&gt; K = 3;              # 3 modes
+
+julia&gt; DC = false;             # no DC part imposed
+
+julia&gt; init = 0;           # initialize omegas uniformly
+
+julia&gt; tol = 1e-7;
+
+julia&gt; v = vmd(f ; alpha = alpha,tau = tau,K = K,DC = false,init = init,tol = tol,sample_frequency = sample_frequency)
+--iteration times 329 -- error 9.69107795888186e-8
+
+julia&gt; p0 = VMD.plot(v,k=0)
+Plot{Plots.GRBackend() n=2}
+
+julia&gt; savefig(p0,&quot;1_0.png&quot;)
+
+julia&gt; p1 = VMD.plot(v,k=1)
+Plot{Plots.GRBackend() n=2}
+
+julia&gt; savefig(p1,&quot;1_1.png&quot;)
+
+julia&gt; p2 = VMD.plot(v,k=2)
+Plot{Plots.GRBackend() n=2}
+
+julia&gt; savefig(p2,&quot;1_2.png&quot;)
+
+julia&gt; p3 = VMD.plot(v,k=3)
+Plot{Plots.GRBackend() n=2}
+
+julia&gt; savefig(p3,&quot;1_3.png&quot;)</code></pre><h2 id="plot-the-original-signal-and-spectrum-1"><a class="docs-heading-anchor" href="#plot-the-original-signal-and-spectrum-1">plot the original signal and spectrum</a><a class="docs-heading-anchor-permalink" href="#plot-the-original-signal-and-spectrum-1" title="Permalink"></a></h2><p><img src="../1_0.png" alt/></p><h2 id="plot-the-1st-decomposed-signal-and-spectrum-1"><a class="docs-heading-anchor" href="#plot-the-1st-decomposed-signal-and-spectrum-1">plot the 1st decomposed signal and spectrum</a><a class="docs-heading-anchor-permalink" href="#plot-the-1st-decomposed-signal-and-spectrum-1" title="Permalink"></a></h2><p><img src="../1_1.png" alt/></p><h2 id="plot-the-2st-signal-and-spectrum-1"><a class="docs-heading-anchor" href="#plot-the-2st-signal-and-spectrum-1">plot the 2st signal and spectrum</a><a class="docs-heading-anchor-permalink" href="#plot-the-2st-signal-and-spectrum-1" title="Permalink"></a></h2><p><img src="../1_2.png" alt/></p><h2 id="plot-the-3st-decomposed-signal-and-spectrum-1"><a class="docs-heading-anchor" href="#plot-the-3st-decomposed-signal-and-spectrum-1">plot the 3st decomposed signal and spectrum</a><a class="docs-heading-anchor-permalink" href="#plot-the-3st-decomposed-signal-and-spectrum-1" title="Permalink"></a></h2><p><img src="../1_3.png" alt/></p></article></div><div class="modal" id="documenter-settings"><div class="modal-background"></div><div class="modal-card"><header class="modal-card-head"><p class="modal-card-title">Settings</p><button class="delete"></button></header><section class="modal-card-body"><p><label class="label">Theme</label><div class="select"><select id="documenter-themepicker"><option value="documenter-light">documenter-light</option><option value="documenter-dark">documenter-dark</option></select></div></p><hr/><p>This document was generated with <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> on <span class="colophon-date" title="Tuesday 16 June 2020 04:41">Tuesday 16 June 2020</span>. Using Julia version 1.4.2.</p></section><footer class="modal-card-foot"></footer></div></div></div></body></html>
