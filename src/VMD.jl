@@ -1,3 +1,6 @@
+"""
+package for Variational mode decomposition
+"""
 module VMD
 
 using FFTW

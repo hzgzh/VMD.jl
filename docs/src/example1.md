@@ -3,6 +3,7 @@
 The first signal is a composition of three
 simple components, namely a general linear trend and two dif-
 ferent harmonics:
+
 $$f_{\mathrm{Sig} 1}(t)=6 t+\cos (8 \pi t)+0.5 \cos (40 \pi t)$$
 
 The signal, its three constituent modes, and the composite

@@ -4,6 +4,7 @@ using Documenter, VMD
 makedocs(
     modules = [VMD],
     sitename="VMD.jl",
+    authors = "hzgzh",
     pages=Any[
         "Home" => "index.md",
         "Examples" => Any[
