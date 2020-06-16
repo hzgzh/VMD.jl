@@ -40,7 +40,7 @@ p1 = VMD.plot(v,k=1)
 savefig(p1,"1.png")
 
 p2 = VMD.plot(v,k=2)
-savefig(p2,"2,png")
+savefig(p2,"2.png")
 
 p3 = VMD.plot(v,k=3)
 savefig(p3,"3.png")

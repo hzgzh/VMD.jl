@@ -298,7 +298,7 @@ end
 - `vmd::Vmd` : vmd
 - `k::Int`   : 0-original signal 1-first component enforcement
 """
-function Plots.plot(v::Vmd;k=1)
+function plot(v::Vmd;k=1)
     @assert k<=v.K error("can't great than $(vmd.K)")
 
     T = length(v.signal)
@@ -309,7 +309,7 @@ function Plots.plot(v::Vmd;k=1)
     if k == 0
         f = fftshift(fft(v.signal))
         p1 = Plots.plot(t,v.signal,title="origin signal ",xlabel="Time (s)",ylabel = "y")
-        p2 = Plots.plot(freqs[1:T2],20log.(abs.(f[T2+1:end])),title = "Original spectral",xlabel = "Freq Hz",ylabel = "db")
+        p2 = Plots.plot(freqs[T2+1:end],20log.(abs.(f[T2+1:end])),title = "Original spectral",xlabel = "Freq Hz",ylabel = "db")
     else
         p1=Plots.plot(t,v.signal_d[:,k],title="Reconstructed mode $k",xlabel="Time (s)",ylabel = "y")
         p2=Plots.plot(freqs[T2+1:T],20log.(abs.(v.mode[T2+1:end,k])),title = "Spectral decomposition",
