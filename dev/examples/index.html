@@ -29,7 +29,7 @@ julia&gt; # some sample parameters for VMD
 
 julia&gt; tau = 0;            # noise-tolerance (no strict fidelity enforcement)
 
-julia&gt; K = 3;              # 3 modes
+julia&gt; K = 4;              # 3 modes
 
 julia&gt; DC = false;             # no DC part imposed
 
@@ -38,11 +38,11 @@ julia&gt; init = 1;           # initialize omegas uniformly
 julia&gt; tol = 1e-7;
 
 julia&gt; v = vmd(f ; alpha = alpha,tau = tau,K = K,DC = false,init = 1,tol = tol,sample_frequency = sample_frequency)
---iteration times 45 -- error 8.817931618016893e-8
+--iteration times 38 -- error 6.947382249782676e-8
 
 julia&gt; # the first mode frequency
        print(&quot;1st mode frequency $(n_mode(v,1))&quot;)
-1st mode frequency 2.352557152181261
+1st mode frequency 2.0025883317501694
 julia&gt; p0 = VMD.plot(v,k=0)
 Plot{Plots.GRBackend() n=2}
 
@@ -61,4 +61,4 @@ julia&gt; savefig(p2,&quot;2.png&quot;)
 julia&gt; p3 = VMD.plot(v,k=3)
 Plot{Plots.GRBackend() n=2}
 
-julia&gt; savefig(p3,&quot;3.png&quot;)</code></pre><h2 id="plot-the-original-signal-and-spectrum-1"><a class="docs-heading-anchor" href="#plot-the-original-signal-and-spectrum-1">plot the original signal and spectrum</a><a class="docs-heading-anchor-permalink" href="#plot-the-original-signal-and-spectrum-1" title="Permalink"></a></h2><p><img src="../0.png" alt/></p><h2 id="plot-the-1st-decomposed-signal-and-spectrum-1"><a class="docs-heading-anchor" href="#plot-the-1st-decomposed-signal-and-spectrum-1">plot the 1st decomposed signal and spectrum</a><a class="docs-heading-anchor-permalink" href="#plot-the-1st-decomposed-signal-and-spectrum-1" title="Permalink"></a></h2><p><img src="../1.png" alt/></p><h2 id="plot-the-2st-signal-and-spectrum-1"><a class="docs-heading-anchor" href="#plot-the-2st-signal-and-spectrum-1">plot the 2st signal and spectrum</a><a class="docs-heading-anchor-permalink" href="#plot-the-2st-signal-and-spectrum-1" title="Permalink"></a></h2><p><img src="../2.png" alt/></p><h2 id="plot-the-3st-decomposed-signal-and-spectrum-1"><a class="docs-heading-anchor" href="#plot-the-3st-decomposed-signal-and-spectrum-1">plot the 3st decomposed signal and spectrum</a><a class="docs-heading-anchor-permalink" href="#plot-the-3st-decomposed-signal-and-spectrum-1" title="Permalink"></a></h2><p><img src="../3.png" alt/></p></article><nav class="docs-footer"><a class="docs-footer-prevpage" href="../">« Home</a><a class="docs-footer-nextpage" href="../example1/">example1 »</a></nav></div><div class="modal" id="documenter-settings"><div class="modal-background"></div><div class="modal-card"><header class="modal-card-head"><p class="modal-card-title">Settings</p><button class="delete"></button></header><section class="modal-card-body"><p><label class="label">Theme</label><div class="select"><select id="documenter-themepicker"><option value="documenter-light">documenter-light</option><option value="documenter-dark">documenter-dark</option></select></div></p><hr/><p>This document was generated with <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> on <span class="colophon-date" title="Tuesday 16 June 2020 10:47">Tuesday 16 June 2020</span>. Using Julia version 1.4.2.</p></section><footer class="modal-card-foot"></footer></div></div></div></body></html>
+julia&gt; savefig(p3,&quot;3.png&quot;)</code></pre><h2 id="plot-the-original-signal-and-spectrum-1"><a class="docs-heading-anchor" href="#plot-the-original-signal-and-spectrum-1">plot the original signal and spectrum</a><a class="docs-heading-anchor-permalink" href="#plot-the-original-signal-and-spectrum-1" title="Permalink"></a></h2><p><img src="../0.png" alt/></p><h2 id="plot-the-1st-decomposed-signal-and-spectrum-1"><a class="docs-heading-anchor" href="#plot-the-1st-decomposed-signal-and-spectrum-1">plot the 1st decomposed signal and spectrum</a><a class="docs-heading-anchor-permalink" href="#plot-the-1st-decomposed-signal-and-spectrum-1" title="Permalink"></a></h2><p><img src="../1.png" alt/></p><h2 id="plot-the-2st-signal-and-spectrum-1"><a class="docs-heading-anchor" href="#plot-the-2st-signal-and-spectrum-1">plot the 2st signal and spectrum</a><a class="docs-heading-anchor-permalink" href="#plot-the-2st-signal-and-spectrum-1" title="Permalink"></a></h2><p><img src="../2.png" alt/></p><h2 id="plot-the-3st-decomposed-signal-and-spectrum-1"><a class="docs-heading-anchor" href="#plot-the-3st-decomposed-signal-and-spectrum-1">plot the 3st decomposed signal and spectrum</a><a class="docs-heading-anchor-permalink" href="#plot-the-3st-decomposed-signal-and-spectrum-1" title="Permalink"></a></h2><p><img src="../3.png" alt/></p></article><nav class="docs-footer"><a class="docs-footer-prevpage" href="../">« Home</a><a class="docs-footer-nextpage" href="../example1/">example1 »</a></nav></div><div class="modal" id="documenter-settings"><div class="modal-background"></div><div class="modal-card"><header class="modal-card-head"><p class="modal-card-title">Settings</p><button class="delete"></button></header><section class="modal-card-body"><p><label class="label">Theme</label><div class="select"><select id="documenter-themepicker"><option value="documenter-light">documenter-light</option><option value="documenter-dark">documenter-dark</option></select></div></p><hr/><p>This document was generated with <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> on <span class="colophon-date" title="Tuesday 16 June 2020 12:43">Tuesday 16 June 2020</span>. Using Julia version 1.4.2.</p></section><footer class="modal-card-foot"></footer></div></div></div></body></html>
