@@ -71,6 +71,8 @@ savefig(p2,"2_2.png")
 p3 = VMD.plot(v,k=3)
 savefig(p3,"2_3.png")
 
+p4 = VMD.plot(v,k=4)
+savefig(p4,"2_4.png")
 ```
 ## plot the original signal and spectrum
 ![](2_0.png)
@@ -83,3 +85,6 @@ savefig(p3,"2_3.png")
 
 ## plot the 3st decomposed signal and spectrum
 ![](2_3.png)
+
+## plot the 4st decomposed signal and spectrum
+![](2_4.png)
