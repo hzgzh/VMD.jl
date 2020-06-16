@@ -22,7 +22,7 @@ f = v_1 + v_2 + v_3 + 0.1*randn(length(v_1));
 # some sample parameters for VMD
 alpha = 2000;       # moderate bandwidth constraint
 tau = 0;            # noise-tolerance (no strict fidelity enforcement)
-K = 3;              # 3 modes
+K = 4;              # 3 modes
 DC = false;             # no DC part imposed
 init = 1;           # initialize omegas uniformly
 tol = 1e-7;

@@ -34,9 +34,9 @@ t = (1:T)/T;
 sample_frequency = 1000;
 
 # modes
-v_1 = @. 1.0/(1.2+cos(2π*t))
-v_2 = @. cos(32π*t+0.2cos(64π*t))
-v_3 = @. 1.5+sin(2π*t)
+v_1 = @. 1.0/(1.2+cos(2π*t));
+v_2 = @. cos(32π*t+0.2cos(64π*t));
+v_3 = @. 1.5+sin(2π*t);
 
 # composite signal, including noise
 f = v_1 + v_2./v_3 + 0.1*randn(length(v_1));
@@ -44,7 +44,7 @@ f = v_1 + v_2./v_3 + 0.1*randn(length(v_1));
 # some sample parameters for VMD
 alpha = 2000;       # moderate bandwidth constraint
 tau = 0;            # noise-tolerance (no strict fidelity enforcement)
-K = 4;              # 3 modes
+K = 3;              # 3 modes
 DC = false;             # no DC part imposed
 init = 0;           # initialize omegas uniformly
 tol = 1e-7;

@@ -21,7 +21,6 @@ export Vmd,vmd,plot,compare,n_component,n_mode
 - `signal_d::Array{T,Val{K}}`:decomposed signals
 - `freqs::Array{T,Val{K}}`:decomposed spectrums
 - `samples::S`:signal sampled frequency
-
 """    
 struct Vmd{T,S<:Int}
     signal::Array{T,1}

@@ -54,7 +54,7 @@ init = 0;           # initialize omegas uniformly
 tol = 1e-7;
 
 
-v = vmd(f ; alpha = alpha,tau = tau,K = K,DC = false,init = 1,tol = tol,sample_frequency = sample_frequency)
+v = vmd(f ; alpha = alpha,tau = tau,K = K,DC = false,init = init,tol = tol,sample_frequency = sample_frequency)
 
 # the first mode frequency
 print("1st mode frequency $(n_mode(v,1))")
