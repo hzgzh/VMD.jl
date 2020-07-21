@@ -109,7 +109,7 @@ plot(v;k = 0)
 plot(v;k = 1)
 ```
 """
-function vmd(signal::Array{Typ,1};alpha=2*length(signal), tau=0, K=3, DC=false, init=1, tol=1e-6,sample_frequency=100) where Typ
+function vmd(signal::Array{Typ,1};alpha=2*length(signal), tau=0, K=3, DC=false, init=1, tol=1e-6,sample_frequency=100,iters=500) where Typ
     # ---------- Preparations
 
     # Period and sampling frequency of input signal
@@ -170,7 +170,7 @@ function vmd(signal::Array{Typ,1};alpha=2*length(signal), tau=0, K=3, DC=false, 
 
     # ----------- Main loop for iterative updates
 
-    while abs(uDiff) > tol && n < N  # not converged and below iterations limit
+    while abs(uDiff) > tol && n < iters  # not converged and below iterations limit
         
         # update first mode accumulator
         k = 1
