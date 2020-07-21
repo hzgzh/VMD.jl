@@ -111,7 +111,7 @@ plot(v;k = 0)
 plot(v;k = 1)
 ```
 """
-function vmd(signal::Array{Typ,1};alpha=2*length(signal), tau=0, K=3, DC=false, init=1, tol=1e-6,sample_frequency=100) where Typ
+function vmd(signal::Array{Typ,1};alpha=2*length(signal), tau=0, K=3, DC=false, init=1, tol=1e-6,sample_frequency=100,iters=500) where Typ
     # ---------- Preparations
 
     # Period and sampling frequency of input signal
@@ -119,13 +119,13 @@ function vmd(signal::Array{Typ,1};alpha=2*length(signal), tau=0, K=3, DC=false, 
    
     T =  length(signal)
     fs = 1/T
-    T2 = Int(T / 2)
+    T2 = T ÷ 2
      # extend the signal by mirroring
     f = [signal[T2:-1:1];signal;signal[T:-1:T2 + 1]]
 
     # Time Domain 0 to T (of mirrored signal)
     T = length(f)
-    T2 = Int(T / 2)
+    T2 = T ÷ 2
     t = collect(1:T) / T
 
     # Spectral Domain discretization
@@ -172,7 +172,7 @@ function vmd(signal::Array{Typ,1};alpha=2*length(signal), tau=0, K=3, DC=false, 
 
     # ----------- Main loop for iterative updates
 
-    while abs(uDiff) > tol && n < N  # not converged and below iterations limit
+    while abs(uDiff) > tol && n < iters  # not converged and below iterations limit
         
         # update first mode accumulator
         k = 1
@@ -272,7 +272,7 @@ function vmd(signal::Array{Typ,1};alpha=2*length(signal), tau=0, K=3, DC=false, 
     for k = 1:K
         u[:,k] = real(ifft(ifftshift(u_hat[:, k])))
     end
-    T4 = convert(typeof(T),T/4)
+    T4 = T ÷ 4
     # remove mirror part
     u = u[T4 + 1:3 * T4,:]
 
