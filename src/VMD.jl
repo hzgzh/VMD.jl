@@ -117,13 +117,13 @@ function vmd(signal::Array{Typ,1};alpha=2*length(signal), tau=0, K=3, DC=false, 
    
     T =  length(signal)
     fs = 1/T
-    T2 = Int(T / 2)
+    T2 = T ÷ 2
      # extend the signal by mirroring
     f = [signal[T2:-1:1];signal;signal[T:-1:T2 + 1]]
 
     # Time Domain 0 to T (of mirrored signal)
     T = length(f)
-    T2 = Int(T / 2)
+    T2 = T ÷ 2
     t = collect(1:T) / T
 
     # Spectral Domain discretization
@@ -270,7 +270,7 @@ function vmd(signal::Array{Typ,1};alpha=2*length(signal), tau=0, K=3, DC=false, 
     for k = 1:K
         u[:,k] = real(ifft(ifftshift(u_hat[:, k])))
     end
-    T4 = convert(typeof(T),T/4)
+    T4 = T ÷ 4
     # remove mirror part
     u = u[T4 + 1:3 * T4,:]
 
@@ -302,7 +302,7 @@ function plot(v::Vmd;k=1)
     @assert k<=v.K error("can't great than $(vmd.K)")
 
     T = length(v.signal)
-    T2 = Int(T/2)
+    T2 = T ÷ 2
     t = collect(1:T)/T
     freqs = @. (t - 0.5 - 1 / T)*v.sample_frequency
     t = t*T/v.sample_frequency
