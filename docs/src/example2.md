@@ -54,7 +54,7 @@ init = 0;           # initialize omegas uniformly
 tol = 1e-7;
 
 
-v = vmd(f ; alpha = alpha,tau = tau,K = K,DC = false,init = 1,tol = tol,sample_frequency = sample_frequency)
+v = vmd(f ; alpha = alpha,tau = tau,K = K,DC = false,init = init,tol = tol,sample_frequency = sample_frequency)
 
 # the first mode frequency
 print("1st mode frequency $(n_mode(v,1))")
@@ -71,6 +71,8 @@ savefig(p2,"2_2.png")
 p3 = VMD.plot(v,k=3)
 savefig(p3,"2_3.png")
 
+p4 = VMD.plot(v,k=4)
+savefig(p4,"2_4.png")
 ```
 ## plot the original signal and spectrum
 ![](2_0.png)
@@ -83,3 +85,6 @@ savefig(p3,"2_3.png")
 
 ## plot the 3st decomposed signal and spectrum
 ![](2_3.png)
+
+## plot the 4st decomposed signal and spectrum
+![](2_4.png)

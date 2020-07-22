@@ -1,3 +1,6 @@
+"""
+package for Variational mode decomposition
+"""
 module VMD
 
 using FFTW
@@ -18,7 +21,6 @@ export Vmd,vmd,plot,compare,n_component,n_mode
 - `signal_d::Array{T,Val{K}}`:decomposed signals
 - `freqs::Array{T,Val{K}}`:decomposed spectrums
 - `samples::S`:signal sampled frequency
-
 """    
 struct Vmd{T,S<:Int}
     signal::Array{T,1}
@@ -315,7 +317,7 @@ function plot(v::Vmd;k=1)
         p2=Plots.plot(freqs[T2+1:T],20log.(abs.(v.mode[T2+1:end,k])),title = "Spectral decomposition",
             xlabel = "Freq Hz",ylabel = "db",label = "$(Printf.@sprintf("%5.3f",v.omega[k])) Hz")
     end
-    Plots.plot(p1,p2,layout = (2,1),size = (640,480))
+    Plots.plot(p1,p2,layout = (2,1))
 end
 
 """
