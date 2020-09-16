@@ -6,8 +6,9 @@ module VMD
 using FFTW
 using Plots
 using Printf
+using RecipesBase
 
-export Vmd,vmd,plot,compare,n_component,n_mode
+export Vmd,vmd,f,compare,n_component,n_mode
 
 """
     Vmd{T,S<:Int}
@@ -300,7 +301,7 @@ end
 - `vmd::Vmd` : vmd
 - `k::Int`   : 0-original signal 1-first component enforcement
 """
-function plot(v::Vmd;k=1)
+@recipe function f(v::Vmd;k=1)
     @assert k<=v.K error("can't great than $(vmd.K)")
 
     T = length(v.signal)
@@ -310,14 +311,41 @@ function plot(v::Vmd;k=1)
     t = t*T/v.sample_frequency
     if k == 0
         f = fftshift(fft(v.signal))
-        p1 = Plots.plot(t,v.signal,title="origin signal ",xlabel="Time (s)",ylabel = "y")
-        p2 = Plots.plot(freqs[T2+1:end],20log.(abs.(f[T2+1:end])),title = "Original spectral",xlabel = "Freq Hz",ylabel = "db")
+        layout := (2,1)
+        @series begin
+            subplot := 1
+            xguide := "Time (s)"
+            yguide := "y"
+            title  := "origin signal"
+            t,v.signal
+        end
+
+        @series begin
+            subplot := 2
+            xguide := "Freqquency (Hz)"
+            yguide := "db"
+            title  := "Original spectral"
+            freqs[T2+1:end],10log10.(abs.(f[T2+1:end]))
+        end
     else
-        p1=Plots.plot(t,v.signal_d[:,k],title="Reconstructed mode $k",xlabel="Time (s)",ylabel = "y")
-        p2=Plots.plot(freqs[T2+1:T],20log.(abs.(v.mode[T2+1:end,k])),title = "Spectral decomposition",
-            xlabel = "Freq Hz",ylabel = "db",label = "$(Printf.@sprintf("%5.3f",v.omega[k])) Hz")
+        layout := (2,1)
+        @series begin
+            subplot := 1
+            xguide := "Time (s)"
+            yguide := "y"
+            title  := "origin signal"
+            t,v.signal_d[:,k]
+        end
+
+        @series begin
+            subplot := 2
+            xguide := "Freqquency (Hz)"
+            yguide := "db"
+            title  := "Reconstructed mode $k"
+            label  := "$(Printf.@sprintf("%5.3f",v.omega[k])) Hz"
+            freqs[T2+1:T],10log10.(abs.(v.mode[T2+1:end,k]))
+        end
     end
-    Plots.plot(p1,p2,layout = (2,1))
 end
 
 """
@@ -328,8 +356,8 @@ end
 function compare(v::Vmd)
     T = length(v.signal)
     t = collect(1:T)./v.sample_frequency
-    Plots.plot(t,v.signal,label = "origin signal")
-    Plots.plot!(t,[sum(v.signal_d[i,:]) for i in 1:length(v.signal)],label = "reconstructed signal",xlabel="Time s")
+    plot(t,v.signal,label = "origin signal")
+    plot!(t,[sum(v.signal_d[i,:]) for i in 1:length(v.signal)],label = "reconstructed signal",xlabel="Time s")
 end
 
 end
