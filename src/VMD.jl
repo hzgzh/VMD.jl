@@ -8,5 +8,5 @@ module VMD
     
     include("svmd.jl")
     include("mvmd.jl")
-
+    include("avmd.jl")
 end
