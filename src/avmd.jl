@@ -43,3 +43,44 @@ function adaptive_vmd(signal; alpha=2000, tol=1e-7, max_iter=500,
 
     return modes_opt[:, 1:K_opt], omega_opt[1:K_opt], K_opt
 end
+
+
+function optimize_vmd_params(signal; K_range=2:8, alpha_range=500:500:5000, fs=1.0, lambda=1.0)
+    best_cost = Inf
+    best_K = nothing
+    best_alpha = nothing
+    best_modes = nothing
+    best_omega = nothing
+    
+    for K in K_range
+        for alpha in alpha_range
+            try
+                vmd_result = vmd(signal; K=K, alpha=alpha)
+                u = vmd_result.u
+                omega = vmd_result.w
+                
+                # 计算重构误差
+                E_recon = norm(signal - sum(u, dims=2))^2 / norm(signal)^2
+                
+                # 计算平均带宽（简化版）
+                bw_vec = [sqrt(sum((fftfreq(length(signal))*fs .- omega[k]).^2 .* abs.(fft(u[:,k])).^2) / sum(abs.(fft(u[:,k])).^2)) for k in 1:K]
+                B_avg = mean(bw_vec)
+                
+                # 成本函数
+                cost = E_recon + lambda * B_avg
+                
+                if cost < best_cost
+                    best_cost = cost
+                    best_K = K
+                    best_alpha = alpha
+                    best_modes = u
+                    best_omega = omega
+                end
+            catch e
+                @error "Error with K=$K and alpha=$alpha: $e"
+            end
+        end
+    end
+    
+    return best_K, best_alpha, best_modes, best_omega, best_cost
+end
